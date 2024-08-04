@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+        @keyframes rotate {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+          @-webkit-keyframes rotate {
+            from {
+              -webkit-transform: rotate(0deg);
+            }
+            to {
+              -webkit-transform: rotate(360deg);
+            }
+          }
+        .load{
+          {% comment %} border: 16px solid #f3f3f3;
+          border-top: 16px solid #3498db;
+          border-color: #f3f3f3;
+          border-radius: 50%; {% endcomment %}
+          width: 120px;
+          height: 120px;
+          margin:110 px auto 0;
+          border: 16px solid black;
+          border-radius:50%;
+          border-right-color:transparent;
+          beloworder-bottom-color:transparent;
+
+          animation: rotate 2s linear infinite;
+          -webkit-transition: all 0.2s ease-in-out;
+          -webkit-animation-name:  rotate;
+          -webkit-animation-duration: 2s;
+          -webkit-animation-timing-function: linear;
+          -webkit-animation-iteration-count: infinite;
+
+          transition: all 0.2s ease-in-out;
+          animation-name: rotate;
+          animation-duration: 2s;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+
+        }
+    </style>
+
+  </head>
+  <body class="flex flex-col min-h-screen bg-gray-100 font-sans antialiased">
+    <!--{% comment %} navbar {% endcomment %}-->
+    <nav class="bg-blue-600 text-white p-4 flex justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-white">AI Blog Generator</h1>
+      </div>
+      <div class="space-x-3">
+        <a href="#" class="text-white text-xl hover:underline">Welcome {{user.username}}</a>
+        <a href="logout" class="text-white text-xl hover:underline">Logout</a>
+        <a href="all-blogs" class="text-white text-xl hover:underline">All blogs</a>
+      </div>
+    </nav>
+
+      <div class="flex-grow container mx-auto mt-10 px-4 sm:px-0">
+        <div
+          class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 flex flex-col"
+        >
+          <div class="text-center mb-4">
+            <h2 class="text-2xl pt-8 pb-2 font-semibold">
+              Welcome to the AI blog generator
+            </h2>
+            <p class="text-gray-600">
+              Generate high-quality blog articles from Youtube using artificial
+              intelligence. Simply enter the link to the Youtube video below and
+              let the AI create the content for you!
+            </p>
+          </div>
+          <br />
+          <div>
+            <h2 class="text-2xl font-semibold mb-4">Enter Your Youtube Link</h2>
+            <div class="flex space-x-4">
+              <input
+                type="url"
+                id="youtubelink"
+                placeholder="Enter The url"
+                class="flex-grow space-x-4 p-4 border-2 border-gray-400 rounded-lg outline-none"
+              />
+              <button
+                id="generateBlogButton"
+                class="transition duration-300 ease-in-out bg-blue-400 p-4 rounded-lg hover:bg-blue-600 sm:bg-red-500">
+                Generate
+              </button>
+            </div>
+          </div>
+
+          <div style="display:none;"  id ="loading-circle" class="load self-center border-blue-100 p-4 "> </div>
+          <section class="pt-4">
+            <h2 class="text-2xl font-semibold py-8">Generated Content</h2>
+            <div id="blogContent" class="">Content</div>
+          </section>
+        </div>
+      </div>
+    <footer class="text-center  text-gray-600 mt-4">
+      Powered by <a href="#">Muhammad</a>
+    </footer>
+
+
+
+    <script>
+     /* document.getElementById("generateBlogButton").addEventListener("click", async () => {
+        const blogContent = document.getElementById("blogContent");
+        const loadingCircle = document.getElementById("loading-circle");
+        const youtube_link = document.getElementById("youtubelink").value;
+        console.log(youtube_link);
+        if (youtube_link) {
+          loadingCircle.style.display = "block";
+          blogContent.innerHTML = "";
+          const endpoint_url = "generate-blogs";
+
+          try {
+
+
+            const response = await fetch(endpoint_url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ link: youtube_link }),
+            });
+
+
+            
+            console.log(response);
+
+
+            const data = await response.json();
+            loadingCircle.style.display = "none";
+            if (data.content) {
+              blogContent.innerHTML = data.content;
+            } else {
+              throw new Error("Unexpected response format");
+            }
+          } catch (error) {
+            console.error("Error Occurred ", error);
+            alert("Something went wrong. Please try again later");
+          }
+          loadingCircle.style.display = "none";
+        } else {
+          alert("Please enter a valid youtube link");
+        }
+      });*/
+
+      document.getElementById("generateBlogButton").addEventListener("click", async () => {
+        const blogContent = document.getElementById("blogContent");
+        const loadingCircle = document.getElementById("loading-circle");
+        const youtube_link = document.getElementById("youtubelink").value;
+        
+        console.log(youtube_link);
+        
+        if (youtube_link) {
+          loadingCircle.style.display = "block";
+          blogContent.innerHTML = "";
+          const endpoint_url = "generate_blogs";
+      
+          try {
+            const response = await fetch(endpoint_url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ link: youtube_link }),
+            });
+            
+            console.log(response);
+            
+            if (!response.ok) {
+              // Check if the response status is not okay and throw an error
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+      
+            const data = await response.json();
+            loadingCircle.style.display = "none";
+      
+            if (data.content) {
+              blogContent.innerHTML = data.content;
+            } else {
+              throw new Error("Unexpected response format");
+            }
+          } catch (error) {
+            console.error("Error Occurred", error);
+            alert("Something went wrong. Please try again later");
+          } finally {
+            loadingCircle.style.display = "none";
+          }
+        } else {
+          alert("Please enter a valid YouTube link");
+        }
+      });
+      
+
+
+    </script>
+
+
+
+  </body>
+</html>
